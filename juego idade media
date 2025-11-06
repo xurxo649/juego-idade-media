@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xogo da Idade Media</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; }
+h1 { color: #333; }
+.container { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px; }
+.zone {
+  width: 30%;
+  min-height: 250px;
+  border: 2px dashed #666;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+}
+.zone h2 { background: #eee; padding: 5px; border-radius: 5px; }
+.item {
+  margin: 5px;
+  padding: 8px;
+  background: #d9edf7;
+  border: 1px solid #31708f;
+  border-radius: 5px;
+  cursor: grab;
+}
+#items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<h1>📜 Xogo: Coloca cada feito na súa Idade Media correspondente</h1>
+
+<p>Arrastra cada evento á súa época: Alta, Plena ou Baixa Idade Media.</p>
+
+<div id="items">
+  <div class="item" draggable="true" data-period="alta">1. Ruralización de Occidente</div>
+  <div class="item" draggable="true" data-period="alta">2. Fortalecemento do poder da Igrexa</div>
+  <div class="item" draggable="true" data-period="alta">3. Creación do Imperio Islámico</div>
+  <div class="item" draggable="true" data-period="plena">4. Feudalismo</div>
+  <div class="item" draggable="true" data-period="plena">5. Construción de castelos</div>
+  <div class="item" draggable="true" data-period="plena">6. Crecemento das cidades</div>
+  <div class="item" draggable="true" data-period="plena">7. Arte románica</div>
+  <div class="item" draggable="true" data-period="plena">8. Arte gótica</div>
+  <div class="item" draggable="true" data-period="baixa">9. Peste Negra</div>
+  <div class="item" draggable="true" data-period="baixa">10. Guerra dos Cen Anos</div>
+</div>
+
+<div class="container">
+  <div class="zone" id="alta"><h2>Alta Idade Media</h2></div>
+  <div class="zone" id="plena"><h2>Plena Idade Media</h2></div>
+  <div class="zone" id="baixa"><h2>Baixa Idade Media</h2></div>
+</div>
+
+<h3 id="resultado"></h3>
+
+<script>
+const items = document.querySelectorAll('.item');
+const zones = document.querySelectorAll('.zone');
+const resultado = document.getElementById('resultado');
+
+items.forEach(item => {
+  item.addEventListener('dragstart', e => item.classList.add('dragging'));
+  item.addEventListener('dragend', e => item.classList.remove('dragging'));
+});
+
+zones.forEach(zone => {
+  zone.addEventListener('dragover', e => e.preventDefault());
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    const dragging = document.querySelector('.dragging');
+    if (dragging) zone.appendChild(dragging);
+    checkAnswers();
+  });
+});
+
+function checkAnswers() {
+  let correct = 0;
+  items.forEach(item => {
+    const parent = item.parentElement.id;
+    if (parent === item.dataset.period) correct++;
+  });
+  if (correct === items.length) {
+    resultado.textContent = "🎉 Perfecto! Clasificaches todos correctamente!";
+  } else {
+    resultado.textContent = `Levas ${correct}/${items.length} correctos.`;
+  }
+}
+</script>
+</body>
+</html>
